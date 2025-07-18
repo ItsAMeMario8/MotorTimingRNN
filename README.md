@@ -42,9 +42,9 @@ ForwardAgent yes
 
 $ chmod 600 ~/.ssh/config
 
-# once thats done you can go through github ot however you store repos and under settings you should find SSH/GPG keys.
-# Click 'Add key' 
-# To get your key, type
+once thats done you can go through github ot however you store repos and under settings you should find SSH/GPG keys.
+Click 'Add key' 
+To get your key, type
 
 $ cat .ssh/id_ed25519.pub
 
@@ -59,4 +59,3 @@ $ git clone git@github.com:ItsAMeMario8/superllama.git
 $ git pull
 
 #After that you can use my one and only python file to run an RNN (Recurrent Neural Network) simulation. This script is to train the RNN on data to later predict future data, either synthisized or real.
-My Lovely Project
