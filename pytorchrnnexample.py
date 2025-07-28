@@ -29,7 +29,6 @@ class RNNModel(nn.Module):
     def __init__(self, input_dim, hidden_layer, hl_dim, output_dim):
         super(RNNModel, self).__init__()
         self.hl_dim = hl_dim
-        # LSTM & RNN compare for paper
         self.lstm = nn.LSTM(input_dim, hidden_layer, hl_dim, batch_first=True)
         self.linear = nn.Linear(hidden_layer, output_dim)
     
@@ -173,7 +172,6 @@ activity = np.array((torch.tensor(padded_tensors)).numpy())
 #General analysis
 
 def analysis_average_activity(activity, info, config):
-    #Load and preprocess results
     plt.savefig('loaded_results')
     plt.title('Activity of RNN')
     t_plot = np.arange(activity.shape[1]) * config['dt']
@@ -183,19 +181,22 @@ analysis_average_activity(activity, info, config)
 
 plt.show()
 
-def analysis_of_rnn_weights():
+def initial_weights():
     od = model.state_dict()
-    #print(od)
-    rnn_tensor = od.pop('lstm.weight_ih_l0')
-    rnn_tensor = rnn_tensor.numpy().reshape((16,9,9))
+    rnn_tensor = od.pop('lstm.weight_hh_l0')
+    rnn_tensor = rnn_tensor.numpy().reshape((324,9,9))
     eigvals, eigvecs = np.linalg.eig(rnn_tensor)
     plt.scatter(eigvals.real, eigvals.imag)
+    plt.xlabel('Real')
+    plt.ylabel('Imaginary')
+    plt.title('Weight During')
 
-analysis_of_rnn_weights()
+initial_weights()
+
+plt.show()
 
 def analysis_of_weights():
     od = model.state_dict()
-    #print(od)
     wanted_tensor = od.pop('linear.weight')
     wanted_tensor = wanted_tensor.numpy().reshape((2,9,9))
     eigvals, eigvecs = np.linalg.eig(wanted_tensor)
