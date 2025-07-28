@@ -29,11 +29,11 @@ class RNNModel(nn.Module):
     def __init__(self, input_dim, hidden_layer, hl_dim, output_dim):
         super(RNNModel, self).__init__()
         self.hl_dim = hl_dim
-        self.lstm = nn.LSTM(input_dim, hidden_layer, hl_dim, batch_first=True)
+        self.gru = nn.GRU(input_dim, hidden_layer, hl_dim, batch_first=True)
         self.linear = nn.Linear(hidden_layer, output_dim)
     
     def forward(self, x):
-        out, hn = self.lstm(x)
+        out, hn = self.gru(x)
         v = self.linear(out) 
         return v, out
 
@@ -183,13 +183,18 @@ plt.show()
 
 def initial_weights():
     od = model.state_dict()
-    rnn_tensor = od.pop('lstm.weight_hh_l0')
-    rnn_tensor = rnn_tensor.numpy().reshape((324,9,9))
+    rnn_tensor = od.pop('gru.weight_hh_l0')
+    rnn_tensor = rnn_tensor.numpy().reshape((243,9,9))
     eigvals, eigvecs = np.linalg.eig(rnn_tensor)
-    plt.scatter(eigvals.real, eigvals.imag)
-    plt.xlabel('Real')
-    plt.ylabel('Imaginary')
-    plt.title('Weight During')
+    fig, ax = plt.subplots()
+    ax.scatter(eigvals.real, eigvals.imag, s=0.7)#adjust size of dots and use .spines to change axis
+    ax.spines["left"].set_position("zero")
+    ax.spines["bottom"].set_position("zero")
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
+    ax.set_xlabel('Real', rotation="horizontal")
+    ax.xaxis.set_label_coords(1.04,0.53)
+    plt.title('Initial Weights')
 
 initial_weights()
 
@@ -200,12 +205,15 @@ def analysis_of_weights():
     wanted_tensor = od.pop('linear.weight')
     wanted_tensor = wanted_tensor.numpy().reshape((2,9,9))
     eigvals, eigvecs = np.linalg.eig(wanted_tensor)
-    plt.title('Learned Weight Matrix Eigenvalues')
-    plt.xlabel('Real')
-    plt.ylabel('Imaginary')
-    plt.scatter(eigvals.real, eigvals.imag)
-    
-    plt.savefig('eigenvalues_weights')
+    fig, ax = plt.subplots()
+    ax.scatter(eigvals.real, eigvals.imag, s=5)
+    ax.spines["left"].set_position("zero")
+    ax.spines["bottom"].set_position("zero")
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
+    ax.set_xlabel('Real')
+    ax.xaxis.set_label_coords(1.04,0.53)
+    plt.title('Learned Weights')
 
 analysis_of_weights()
 
