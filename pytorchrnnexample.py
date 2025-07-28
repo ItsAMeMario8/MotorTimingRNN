@@ -29,11 +29,11 @@ class RNNModel(nn.Module):
     def __init__(self, input_dim, hidden_layer, hl_dim, output_dim):
         super(RNNModel, self).__init__()
         self.hl_dim = hl_dim
-        self.gru = nn.GRU(input_dim, hidden_layer, hl_dim, batch_first=True)
+        self.lstm = nn.LSTM(input_dim, hidden_layer, hl_dim, batch_first=True)
         self.linear = nn.Linear(hidden_layer, output_dim)
     
     def forward(self, x):
-        out, hn = self.gru(x)
+        out, hn = self.lstm(x)
         v = self.linear(out) 
         return v, out
 
@@ -183,8 +183,8 @@ plt.show()
 
 def initial_weights():
     od = model.state_dict()
-    rnn_tensor = od.pop('gru.weight_hh_l0')
-    rnn_tensor = rnn_tensor.numpy().reshape((243,9,9))
+    rnn_tensor = od.pop('lstm.weight_hh_l0')
+    rnn_tensor = rnn_tensor.numpy().reshape((324,9,9))
     eigvals, eigvecs = np.linalg.eig(rnn_tensor)
     fig, ax = plt.subplots()
     ax.scatter(eigvals.real, eigvals.imag, s=0.7)#adjust size of dots and use .spines to change axis
