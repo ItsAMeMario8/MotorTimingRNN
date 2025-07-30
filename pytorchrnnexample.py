@@ -105,7 +105,7 @@ plt.plot(iteration_list,loss_list)
 plt.xlabel("Iteration")
 plt.ylabel("Loss")
 plt.title("Loss")
-plt.savefig('network_model_graph.png')
+plt.savefig('model_loss_graph.png')
 plt.show()
 
 def infer_test_timing(env):
@@ -172,7 +172,7 @@ activity = np.array((torch.tensor(padded_tensors)).numpy())
 #General analysis
 
 def analysis_average_activity(activity, info, config):
-    plt.savefig('loaded_results')
+    plt.savefig('model_activity.png')
     plt.title('Activity of RNN')
     t_plot = np.arange(activity.shape[1]) * config['dt']
     plt.plot(t_plot, activity.mean(axis=0).mean(axis=-1))
@@ -195,6 +195,7 @@ def initial_weights():
     ax.set_xlabel('Real', rotation="horizontal")
     ax.xaxis.set_label_coords(1.04,0.53)
     plt.title('Initial Weights')
+    plt.savefig('initial_weights.png')
 
 initial_weights()
 
@@ -214,6 +215,7 @@ def analysis_of_weights():
     ax.set_xlabel('Real')
     ax.xaxis.set_label_coords(1.04,0.53)
     plt.title('Learned Weights')
+    plt.savefig('learned_weights.png')
 
 analysis_of_weights()
 

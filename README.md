@@ -28,3 +28,7 @@ pip install torch torchvision torchaudio
 pip install neurogym 
 
 #From there I would run the file you cloned using python3 in the virtual environment. Just a breif overveiw of the RNN. In this case I am running an LSTM () on a motor timing dataset. The RNN will train on this data and can then change it's weights to produce an output as close to the data as possible. The first graph given is it's loss over the training time. The second is the activity of hidden layers that is used to store previous input data to help make predictions later. The last graph shown will be the weights that the RNN has reshaped as it trained using the eigenvalues of the output tensor. This current model has 81 hidden layers and it's hidden layer dimentions are set to 15. Upping the dimention will make the training long but it will give better results. Changing the number of hidden layers is much easier, the only thing is that it must produce a positive integer when square rooted.
+
+pdflatex MotorTiming.tex
+
+#With this you can build and read the paper as a pdf

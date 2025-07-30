@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[ignoreheadfoot, margin=2 cm,footskip=1.0 cm]{geometry}
+\usepackage{amsmath}
+\usepackage{biblatex}
+\usepackage[font=small]{caption}
+\addbibresource{references.bib}
+
+\setcounter{secnumdepth}{0}
+
+\title{\bf \fontsize{25 pt}{25 pt} Modeling Motor Neuron Timing Using a Recurrent Neural Network}
+\author{Emily Whyms}
+\date{July 25, 2025}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract\centering}
+A Recurrent Neural Network model is trained on a dataset\cite{Wang2018} of monkey's neuron signal times so it can eventually output the intervals when given an initial cue. This model produces graphs on the model's loss and the change in it's weights before and after training. The three kinds of Recurrent Neural Networks (RNNs) tested was a Gated Recurrent Unit(GRU), Long-Short-Term Memory(LSTM), and basic Recurrent Neural Network(RNN). The loss data reflected that the short term memory model had some loss spikes, but the LSTM and GRU model flattened after the initial loss drop. Checking the weights of each model, they all went through rich learning due to the amount of hidden layers and dimensions that the model could store data in. This reflected in the change of eigenvalues. The initial weights started in a scatter resembling a circle in around the point (0,0). After the model went through training, it changed the eigenvalues in order to produce better weighted outputs.
+\section{Introduction\centering}
+Like circuits, your brain passes information through electrical signal. The neurons in your brain act as wires to carry those signals to the needed parts of the body in chains, or what I will refer to as neural networks. The brain will use the neural networks to pass messages to motor parts of the body such as arms, legs, and hands. In performing a task, the brain processes the event much like an input and will respond with an output to, in this case, the muscles\cite{ScottS2004}. Along with the timing of the physical task such as the time it takes to raise your hand, there is a small time that can be calculated to find how long it takes for the brain to send the signal to the muscle\cite{Churchland2006}. This model was trained on the timing of the signals and was done to understand the learning and weight changes that the model makes to accurately obtain the timing of the network. \cite{Wang2018}
+\section{Methods\centering}
+The Recurrent Neural Network(RNN) is trained on a motor timing dataset which is then given a set pulse to produce a timed interval once the output reaches the target. The model was run on PyTorch using Matplotlib, pandas, Neurogym, and Numpy. It was run with the basic RNN, LSTM, and GRU as parameters; however, the GRU is known to be a simpler version of an LSTM. The dimension was set too 15 and the hidden layers were set to 81. These values should be set within a range of 0-20 and 50-100, respectively, in order to get enough eigenvalues to graph. For the amount of hidden layers, it must be equal to a positive integer when square-rooted since you must pull the eigen values from a tensor later. The only way to do that is to have the matrices inside the tensor be squares such as 8x8 or 9x9.
+\par
+\noindent{}
+A RNN is much like a feedforward network in the sense that it takes an input, runs it through a few hidden layers with weights, and spits out an output influenced by those layers. Where it differs is how the hidden layers are used. RNNs will sum up their data in every layer since they like sharing their information and have a common weight. This weight can change as the RNN is fed more data based on previous input data. The RNNs back propagation is what allows it to be a better learner since it starts with the end data and will change weights according to what it needs to get the answers going backward.
+\par\noindent{}
+The Basic RNN uses what we call short-term memory. For example, if it is given a sentences and is tasked to find the next word in a new sentence, it will use the words within the sentence it is trying to find the word for to find that word. Issues can arise from this, since the information of that next word could be in the sentences prior to the sentence it is on. That's where long-short-term memory(LSTM)s and gated recurrent unit(GRU)s come in hand. These RNNs solve the problem that arose with the basic RNN. To add to the example, they use the previous sentences in their long-term memory to help influence the decision when outputting the next word. 
+\par\noindent{}
+The way the LSTM and GRU are able to store the previous data is through states. The two states they switch between are the hidden and cell states. The cell state is the model's memory, taking and storing data from the hidden state. In the hidden state, the LSTM can toss, keep, or output data from it's memory and the GRU can update and reset it's memory. Gates sort data into these categories and are activated by functions such as sigmoid, ReLU, and tanh.(Figures 1-3) 
+\[  S(x) =  \frac{\mathrm{1} }{\mathrm{1} + e^{-x} }\]\captionof{figure}{Sigmoid Function}
+
+\[  T(x) =  \frac{(e^x-e^{-x}) }{(e + e^{-x})} \]\captionof{figure}{Tanh}
+
+\[  R(x) = \begin{cases} x,\text{ if }x \ge 0 \\ 0, \text{ otherwise}\end{cases} \] \captionof{figure}{ReLU}
+
+These functions take real numbers and assign them values on a scale of 0-1. The data will then follow the path of the gate that was activated.
+ 
+\section{Results\centering}
+\par\noindent{}
+Each RNN model was run with the same dataset for 2000 epochs. One epoch is the model training through the entire dataset once, so each RNN ran through the dataset 2000 times, all averaging with the score of 1.0 accuracy. Even though their average was the same, the loss graph of the basic RNN showed that it's loss spiked a few times.(figure 4)
+\begin{center}
+    \begin{minipage}{0.5\linewidth}
+        \includegraphics[width=\linewidth]{Graphs/RNN_Loss.png}\captionof{figure}{Basic RNN Loss}
+    \end{minipage}
+\end{center}
+\par\noindent{}This is most likely due to the basic RNNs short term memory, so even if it does well in previous runs of the data, it will not have all of it stored, therefore will have a few runs with higher loss and lower accuracy. As for the long-term memory models, they were able to stay flat after the initial drop in loss. The two loss curves of the LSTM and GRU should be similar since the GRU is known to be a simpler model of the LSTM.(Figure 5)(Figure 6)
+\par\noindent{}
+\begin{center}
+    \begin{minipage}{0.48\linewidth}
+        \includegraphics[width=\linewidth]{Graphs/LSTM_Loss.png}\captionof{figure}{LSTM Loss}
+    \end{minipage}
+    \begin{minipage}{0.48\linewidth}
+     \includegraphics[width=\linewidth]{Graphs/GRU_Loss.png}\captionof{figure}{GRU Loss}    
+    \end{minipage}
+\end{center}
+The starting weights of the dataset followed Girko's Circular law:
+random n $\times$ n real matrices
+where entries are independent and identically distribute random variables with a mean of 0 and a variance of 1/n. They will uniformly distribute over the unit disk creating a circle like shape.(figure 7)(figure 8)(figure 9)
+\begin{center}
+    \begin{minipage}{0.48\linewidth}
+        \includegraphics[width=\linewidth]{Graphs/RNN_Initial_Weight.png}\captionof{figure}{Basic RNN Initial Weights}
+    \end{minipage}
+    \begin{minipage}{0.48\linewidth}
+     \includegraphics[width=\linewidth]{Graphs/LSTM_Initial_Weights.png}\captionof{figure}{LSTM Initial Weights}    
+    \end{minipage}
+\end{center}
+The Basic RNN has a less prominent circle due to its low amount of 81 matrices in comparison to the LSTM with a more visible circle and 324 matrices. The LSTM's circle is by far the most prominent and as ${n\to\infty}$, the circle will become more visible.
+\begin{center}
+    \begin{minipage}{0.48\linewidth}
+     \includegraphics[width=\linewidth]{Graphs/GRU_Initial_Weights.png}\captionof{figure}{GRU Initial Weights}    
+    \end{minipage}
+\end{center}
+The GRU's input matrices are at 243, somewhere in between, but closer to the LSTM as it is more visible and is also a long-term memory model. All seem to be a circle about the origin with a radius of ~0.2-0.3 which is a stark contrast to the learned weights after the model had finished training.
+\begin{center}
+    \begin{minipage}{0.48\linewidth}
+        \includegraphics[width=\linewidth]{Graphs/RNN_Learned_Weights.png}\captionof{figure}{Basic RNN Learned Weights}
+    \end{minipage}
+    \begin{minipage}{0.48\linewidth}
+     \includegraphics[width=\linewidth]{Graphs/LSTM_Learned_Weights.png}\captionof{figure}{LSTM Learned Weights}    
+    \end{minipage}
+    \begin{minipage}{0.48\linewidth}
+    \includegraphics[width=\linewidth]{Graphs/GRU_Learned_Weights.png}\captionof{figure}{GRU Learned Weights}
+    \end{minipage}
+\end{center}
+There are less eigenvalues in these plots due to them being condensed as the model trained. The main focus is that they are now not in a circular pattern, but strewn around, ranging from ~(-0.12,-0.16) to ~(0.13,0.05). There is a pretty big difference in where the eigenvalues were plotted between the different models. The basic RNN seems resemble a 6 point star with lines running along the y-axis, x-axis, x=y and x=-y, all going through the origin. The right two quadrants seem to be more on the line with a slope of one as opposed to the left two quadrants which seem to be exponential curves. Even though the LSTM and GRU are similar, and were in previous graphs, they look as if they now have no correlation. The one thing that is similar in both long-term memory models is their almost loop like patterns. If the learned weights had more eigen values there might be more of a similarity shown.
+\par\noindent{}
+The changed positions of the eigenvalues indicates that the models got rich learning as opposed to lazy learning\cite{FLESCH20221258}. Lazy learning would be to use preexisting weights throughout. Rich learning is the model adapting to the dataset and finding it's own weights to provide the best answer.
+\section{Discussion\centering}
+The models showed that with more hidden layers came a larger eigenvalue change and that the models were able to adapt to the data and produce an accurate output. This was due to the model's hidden state and their ability to store and sort through data to further adapt their weights. The long-term memory models showed some more variation in their eigenvalues due to their ability to use gates to sort through the memory.(Figures 1-3) The learned eigenvalues of the LSTM and GRU showed loop-like patterns which was a stark contrast to the circle pattern formed by Girko's circular law. The basic RNN's did not show much of a circle and had points still about the origin through linear and exponential lines made of eigenvalues.
+\par\noindent{}
+When training a model on larger datasets with more epochs, the best learners tended to be long-term memory models since they could use gates with equations to adapt and sort through memory, as well as being able to call back to that memory much better than the basic short-term memory model(the RNN). This was shown in the loss curves of each model, showing that the LSTM and GRU had greater overall accuracy, even if all models obtained a perfect score.
+\par\noindent{}
+An issue that arose was the initial weights. I believe each dimension has its own initial weight but this model only used the very first initial weight of the first dimension. Following that, the learned weights got condensed over the training time, leaving only a few eigenvalues to plot. It still gave a good understanding of the model's learning, but could be improved upon. \par\noindent{}
+The next step is to now use the model to get the timings of the neural path as well as the processing and networking behind the decision. To do this, the model would want more learned eigenvalues to really show how much it learned. Following up on the other datasets within this experiment\cite{Wang2018} will show a better idea of the brain's activity during motor movements. Being able to get real data from DANDI could open up even more data to look through and to get a better feel of the actual human brain.
+
+\section{References\centering}
+\printbibliography
+\end{document}
