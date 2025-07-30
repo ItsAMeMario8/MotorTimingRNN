@@ -184,7 +184,7 @@ plt.show()
 def initial_weights():
     od = model.state_dict()
     rnn_tensor = od.pop('lstm.weight_hh_l0')
-    rnn_tensor = rnn_tensor.numpy().reshape((81,9,9))
+    rnn_tensor = rnn_tensor.numpy().reshape((324,9,9))
     eigvals, eigvecs = np.linalg.eig(rnn_tensor)
     fig, ax = plt.subplots()
     ax.scatter(eigvals.real, eigvals.imag, s=0.7)#adjust size of dots and use .spines to change axis
